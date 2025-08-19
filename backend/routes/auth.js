@@ -1,5 +1,13 @@
+const express = require("express");
+const router = express.Router();
 const authController = require("../controller/authController");
 
-const router = require("express").Router();
+router.get("/__ping", (req, res) => res.json({ ok: true }));
 
+//REGISTER
 router.post("/register", authController.registerUser);
+
+//LOGIN
+router.post("/login", authController.loginUser);
+
+module.exports = router;

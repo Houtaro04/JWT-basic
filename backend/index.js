@@ -17,7 +17,11 @@ app.use(cookieParser());
 app.use(express.json());
 
 //ROUTES
-app.use("/v1/auth", authRoute)
+app.use("/v1/auth", (req, _res, next) => {
+  console.log("HIT /v1/auth ->", req.method, req.originalUrl);
+  next();
+}, authRoute);
+
 
 app.listen(8000, () => {
     console.log("Server is running");
