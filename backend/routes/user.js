@@ -1,16 +1,18 @@
-const middlewareController = require("../controller/middlewareController");
+// backend/routes/user.js
+const router = require("express").Router();
 const userController = require("../controller/userController");
-const user = require("../models/user");
+const mw = require("../controller/middlewareController");
 
-const router = require('express').Router();
-
-// Kiểm tra base path
+// Health check (tuỳ chọn)
 router.get("/__ping", (req, res) => res.json({ ok: true }));
 
-//Get all users
-router.get('/', middlewareController.verifyToken, userController.getAllUsers);
+// Admin xem tất cả users
+router.get("/", mw.verifyTokenAndAdmin, userController.getAllUsers);
 
-//Delete user
-router.delete('/:id', userController.deleteUser);
+// User chỉ xem chính mình (hoặc admin xem bất kỳ id)
+router.get("/:id", mw.verifyTokenAndAuthorization, userController.getUserById);
+
+// Xoá user: cho admin hoặc chính chủ
+router.delete("/:id", mw.verifyTokenAndAuthorization, userController.deleteUser);
 
 module.exports = router;

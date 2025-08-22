@@ -39,8 +39,8 @@ const authController = {
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) return res.status(401).json({ message: "Sai mật khẩu" });
 
-        const payload = { id: user._id, username: user.username };
-        const token = jwt.sign(payload, process.env.JWT_SECRET || "dev_secret", { expiresIn: "1h" });
+        const payload = { id: user._id, username: user.username, admin: user.admin };
+        const token = jwt.sign(payload, process.env.JWT_SECRET || "dev_secret", { expiresIn: "7d" });
 
         const { password: _pw, __v, ...safe } = user.toObject();
         // Trả token trong body (hoặc set cookie nếu muốn)

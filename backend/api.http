@@ -18,19 +18,20 @@ POST {{baseUrl}}/v1/auth/register
 Content-Type: application/json
 
 {
-  "username": "testuser2",
+  "username": "myadmin",
   "password": "123456789",
-  "email": "testuser2@gmail.com"
+  "email": "admin@gmail.com"
 }
 
-## Ping user
+### Ping user
 GET {{baseUrl}}/v1/user/__ping
 
 ### Get users
 GET {{baseUrl}}/v1/user/
 
 ### DELETE USER
-DELETE {{baseUrl}}/v1/user/68a81392fb9b42ccae18fa9a
+DELETE {{baseUrl}}/v1/user/68a813e6fb9b42ccae18faa0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTgzODU4ZmU4ZGM5OTFkZjE4NGY4NiIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJhZG1pbiI6ZmFsc2UsImlhdCI6MTc1NTg1NDk1MywiZXhwIjoxNzU2NDU5NzUzfQ.s2sXqBJhNzq4Uu7PVoyCaVA5tVUwz6P8lH_bsW-nn3w
 
 ### Login
 POST {{baseUrl}}/v1/auth/login
@@ -41,7 +42,7 @@ Content-Type: application/json
   "password": "123456789"
 }
 
-### Get user with Token
-GET {{baseUrl}}/v1/user/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTgxMzdmZmI5YjQyY2NhZTE4ZmE5OCIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJpYXQiOjE3NTU4NTEyMzcsImV4cCI6MTc1NTg1NDgzN30.bRAIlAYHSKRIOlR85Rsiek78wxXI9zT7msLYHMvIcT4
+### Get user with role Admin
+GET {{baseUrl}}/v1/user/68a83858fe8dc991df184f86
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTgzODU4ZmU4ZGM5OTFkZjE4NGY4NiIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJhZG1pbiI6ZmFsc2UsImlhdCI6MTc1NTg1NTI2MCwiZXhwIjoxNzU2NDYwMDYwfQ.AapIbMT-WItL6hMZy0NtvO-TQ247048wBJi9jDEHYA4
 
