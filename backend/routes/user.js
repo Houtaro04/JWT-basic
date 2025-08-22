@@ -1,3 +1,4 @@
+const middlewareController = require("../controller/middlewareController");
 const userController = require("../controller/userController");
 const user = require("../models/user");
 
@@ -7,7 +8,7 @@ const router = require('express').Router();
 router.get("/__ping", (req, res) => res.json({ ok: true }));
 
 //Get all users
-router.get('/', userController.getAllUsers);
+router.get('/', middlewareController.verifyToken, userController.getAllUsers);
 
 //Delete user
 router.delete('/:id', userController.deleteUser);

@@ -26,7 +26,7 @@ Content-Type: application/json
 ## Ping user
 GET {{baseUrl}}/v1/user/__ping
 
-### Get all users
+### Get users
 GET {{baseUrl}}/v1/user/
 
 ### DELETE USER
@@ -40,3 +40,8 @@ Content-Type: application/json
   "username": "testuser",
   "password": "123456789"
 }
+
+### Get user with Token
+GET {{baseUrl}}/v1/user/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTgxMzdmZmI5YjQyY2NhZTE4ZmE5OCIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJpYXQiOjE3NTU4NTEyMzcsImV4cCI6MTc1NTg1NDgzN30.bRAIlAYHSKRIOlR85Rsiek78wxXI9zT7msLYHMvIcT4
+

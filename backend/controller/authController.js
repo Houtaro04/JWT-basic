@@ -44,7 +44,7 @@ const authController = {
 
         const { password: _pw, __v, ...safe } = user.toObject();
         // Trả token trong body (hoặc set cookie nếu muốn)
-        return res.json({ token, user: safe });
+        return res.json({ user: safe, token });
         } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Server error" });
