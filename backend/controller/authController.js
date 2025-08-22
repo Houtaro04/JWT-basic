@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-
+const jwt = require("jsonwebtoken");
 
 const authController = {
     //REGISTER
@@ -36,8 +36,8 @@ const authController = {
         const user = await User.findOne(query).select("+password");
         if (!user) return res.status(401).json({ message: "Sai thông tin đăng nhập" });
 
-        const ok = await bcrypt.compare(password, user.password);
-        if (!ok) return res.status(401).json({ message: "Sai mật khẩu" });
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) return res.status(401).json({ message: "Sai mật khẩu" });
 
         const payload = { id: user._id, username: user.username };
         const token = jwt.sign(payload, process.env.JWT_SECRET || "dev_secret", { expiresIn: "1h" });

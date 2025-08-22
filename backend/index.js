@@ -32,3 +32,6 @@ app.use("/v1/user", (req, res, next) => {
 app.listen(8000, () => {
     console.log("Server is running");
 })
+
+//JSON WEB TOKEN
+

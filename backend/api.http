@@ -1,7 +1,42 @@
 @baseUrl = http://localhost:8000
 
 ### Ping
-GET {{baseUrl}}/v1/user/__ping
-### Get all users
-GET {{baseUrl}}/v1/user
+GET {{baseUrl}}/v1/auth/__ping
 
+### Register
+POST {{baseUrl}}/v1/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "123456789",
+  "email": "testuser@gmail.com"
+}
+
+### REGISTER
+POST {{baseUrl}}/v1/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser2",
+  "password": "123456789",
+  "email": "testuser2@gmail.com"
+}
+
+## Ping user
+GET {{baseUrl}}/v1/user/__ping
+
+### Get all users
+GET {{baseUrl}}/v1/user/
+
+### DELETE USER
+DELETE {{baseUrl}}/v1/user/68a81392fb9b42ccae18fa9a
+
+### Login
+POST {{baseUrl}}/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "123456789"
+}
