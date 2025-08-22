@@ -1,13 +1,7 @@
 @baseUrl = http://localhost:8000
 
 ### Ping
-GET {{baseUrl}}/v1/auth/__ping
+GET {{baseUrl}}/v1/user/__ping
+### Get all users
+GET {{baseUrl}}/v1/user
 
-### Login (dùng username)
-POST {{baseUrl}}/v1/auth/login
-Content-Type: application/json
-
-{
-  "username": "testuser",
-  "password": "123456789"
-}

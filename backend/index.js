@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const authRoute = require("./routes/auth");
+const userRoute = require("./routes/user");
 
 dotenv.config();
 const app = express();
@@ -21,6 +22,11 @@ app.use("/v1/auth", (req, _res, next) => {
   console.log("HIT /v1/auth ->", req.method, req.originalUrl);
   next();
 }, authRoute);
+
+app.use("/v1/user", (req, res, next) => {
+  console.log("HIT /v1/user ->", req.method, req.originalUrl);
+  next();
+}, userRoute);
 
 
 app.listen(8000, () => {
