@@ -49,3 +49,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTgzODU4Z
 ### Refresh token
 POST {{baseUrl}}/v1/auth/refresh
 Cookie: refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTgzODU4ZmU4ZGM5OTFkZjE4NGY4NiIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJhZG1pbiI6ZmFsc2UsImlhdCI6MTc1NjExNDYxMiwiZXhwIjoxNzg3NjUwNjEyfQ.RwWEqtRMqFOU_Wnzfl3n-TBnPD2D-48aQfz4i6SlroE
+
+### Logout
+POST {{baseUrl}}/v1/auth/logout
