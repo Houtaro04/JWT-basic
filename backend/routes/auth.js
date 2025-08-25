@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controller/authController");
+const middlewareController = require("../controller/middlewareController");
 
 router.get("/__ping", (req, res) => res.json({ ok: true }));
 
@@ -14,6 +15,6 @@ router.post("/login", authController.loginUser);
 router.post("/refresh", authController.requestRefreshToken);
 
 //LOGOUT
-router.post("/logout", authController.userLogout);
+router.post("/logout", middlewareController.verifyToken,authController.userLogout);
 
 module.exports = router;

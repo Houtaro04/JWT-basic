@@ -52,3 +52,4 @@ Cookie: refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTgzODU4
 
 ### Logout
 POST {{baseUrl}}/v1/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTgzODU4ZmU4ZGM5OTFkZjE4NGY4NiIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJhZG1pbiI6ZmFsc2UsImlhdCI6MTc1NjExNTYzMywiZXhwIjoxNzU2MTE1NjYzfQ.z2VkvC62-btaNJ-sr2u6KKX0QaSGmOQKaf-llqW2VaE
