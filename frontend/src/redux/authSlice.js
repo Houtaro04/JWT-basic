@@ -1,4 +1,4 @@
-import {creadSlice, current} from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const authSlice = createSlice({
     name: 'auth',
@@ -21,6 +21,9 @@ const authSlice = createSlice({
         loginFail: (state, action) => {
             state.login.isFetching = false;
             state.login.error = true;
-        }
+        },
     }
 })
+
+export const { loginStart, loginSuccess, loginFail } = authSlice.actions;
+export default authSlice.reducer;
