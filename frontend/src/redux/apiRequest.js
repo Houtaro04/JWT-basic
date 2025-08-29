@@ -1,5 +1,20 @@
 import axios from "axios";
-import { loginStart, loginSuccess, loginFail, registerStart, registerSuccess, registerFail } from "./authSlice";
+import { 
+    loginStart, 
+    loginSuccess, 
+    loginFail, 
+    registerStart, 
+    registerSuccess, 
+    registerFail
+} from "./authSlice";
+import { 
+    getUsersStart,
+    getUsersSuccess,
+    getUsersFail,
+    getMeStart,
+    getMeSuccess,
+    getMeFail
+} from "./userSlice";
 
 export const loginUser = async (user, dispatch, navigate) => {
     dispatch(loginStart());
@@ -22,3 +37,34 @@ export const registerUser = async (user, dispatch, navigate) => {
         dispatch(registerFail());
     }
 }
+
+export const getAllUsers = async (token, dispatch) => {
+  dispatch(getUsersStart());
+  try {
+    const { data } = await axios.get("/v1/user", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const items = Array.isArray(data) ? data : data.items || [];
+    dispatch(getUsersSuccess({
+      items,
+      page: data.page,
+      limit: data.limit,
+      total: data.total,
+    }));
+  } catch (e) {
+    dispatch(getUsersFail(e.response?.data || e.message));
+  }
+};
+
+// Lấy thông tin chính mình (user thường)
+export const getMe = async (token, id, dispatch) => {
+  dispatch(getMeStart());
+  try {
+    const { data } = await axios.get(`/v1/user/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    dispatch(getMeSuccess(data)); // có thể là 1 object user
+  } catch (err) {
+    dispatch(getMeFail(err.response?.data || err.message));
+  }
+};
