@@ -9,7 +9,7 @@ const authSlice = createSlice({
             error: false,
         }
     },
-    reducersL: {
+    reducers: {
         loginStart: (state) => {
             state.login.isFetching = true;
         },
