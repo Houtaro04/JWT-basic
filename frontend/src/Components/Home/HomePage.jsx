@@ -25,7 +25,9 @@ const HomePage = () => {
   return (
     <main className="home-container">
       <div className="home-title">User List</div>
-
+      <div className="home-role">
+        {`Your role: ${isAdmin ? "Admin" : "User"}`}
+      </div>
       <div className="home-userlist">
         {isAdmin ? (
           !userList.length ? (
