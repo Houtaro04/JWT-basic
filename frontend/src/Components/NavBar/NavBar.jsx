@@ -26,8 +26,8 @@ const NavBar = () => {
       <Link to="/" className="navbar-home"> Home </Link>
       {user? (
         <>
-        <p className="navbar-user">Hi, <span> {user.username} </span> </p>
-        <button className="navbar-logout" onClick={handleLogout}>
+        <p className="navbar-user">Hi, <span> {user.user.username} </span> </p>
+        <button className="navbar-logout" onClick={handleLogout} style={{color: 'white'}}>
             Log out
           </button>
         </>

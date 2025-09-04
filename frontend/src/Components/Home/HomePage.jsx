@@ -5,13 +5,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-  const auth = useSelector(s => s.auth.login);
+  const auth    = useSelector(s => s.auth.login);
   const token   = auth?.token ?? auth?.currentUser?.token;
   const profile = auth?.user  ?? auth?.currentUser?.user;
   const isAdmin = profile?.admin === true;
 
-  const userList = useSelector(s => s.users?.users?.allUsers || []);
-  const me       = useSelector(s => s.users?.me?.profile);
+  const userList = useSelector(s => s.users.list.items);   // <-- sửa
+  const me       = useSelector(s => s.users.me.profile);   // <-- OK
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
