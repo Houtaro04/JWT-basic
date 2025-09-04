@@ -13,9 +13,9 @@ const NavBar = () => {
     // clear redux state
     dispatch(logout());
 
-    // nếu có lưu token/user ở localStorage thì xoá luôn
-    localStorage.removeItem("persist:root"); // nếu dùng redux-persist
-    localStorage.removeItem("token");        // hoặc key bạn đặt riêng
+    // xóa token/user ở localStorage
+    localStorage.removeItem("persist:root");
+    localStorage.removeItem("token");
 
     // điều hướng về trang login
     navigate("/login");
