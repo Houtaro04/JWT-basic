@@ -38,7 +38,6 @@ const userController = {
     }
   },
 
-  // Đã có từ trước
   deleteUser: async (req, res) => {
     try {
       const { id } = req.params;
