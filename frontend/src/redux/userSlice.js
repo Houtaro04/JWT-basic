@@ -8,6 +8,7 @@ const userSlice = createSlice({
     list: { items: [], isFetching: false, error: null, page: 1, limit: 20, total: 0 },
     // hồ sơ của chính mình (cho user thường)
     me:   { profile: null, isFetching: false, error: null },
+    msg:"",
   },
   reducers: {
     // ------- LIST (admin) -------
@@ -23,15 +24,39 @@ const userSlice = createSlice({
     getUsersFail: (s, a) => { s.list.isFetching = false; s.list.error = a.payload || "error"; },
 
     // ------- ME (self) -------
-    getMeStart:   (s) => { s.me.isFetching = true; s.me.error = null; },
-    getMeSuccess: (s, a) => { s.me.isFetching = false; s.me.profile = a.payload; },
-    getMeFail: (s, a) => { s.me.isFetching = false; s.me.error = a.payload || "error"; },
+    getMeStart:   (s) => { 
+      s.me.isFetching = true; 
+      s.me.error = null; 
+    },
+    getMeSuccess: (s, a) => { 
+      s.me.isFetching = false; 
+      s.me.profile = a.payload; 
+    },
+    getMeFail: (s, a) => { 
+      s.me.isFetching = false; 
+      s.me.error = a.payload || "error"; 
+    },
+    deleteUserStart: (s) => { 
+      s.me.isFetching = true; 
+      s.me.error = null; 
+    },
+    deleteUserSuccess: (s, a) => { 
+      s.me.isFetching = false; 
+      s.me.profile = null; 
+      s.msg = a.payload || "Deleted successfully";
+    },
+    deleteUserFail: (s, a) => { 
+      s.me.isFetching = false; 
+      s.me.error = true; 
+      s.msg = a.payload || "error";
+    },
   },
 });
 
 export const {
   getUsersStart, getUsersSuccess, getUsersFail,
   getMeStart, getMeSuccess, getMeFail,
+  deleteUserStart, deleteUserSuccess, deleteUserFail,
 } = userSlice.actions;
 
 export default userSlice.reducer;

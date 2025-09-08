@@ -22,6 +22,9 @@ const HomePage = () => {
     else if (profile?._id) getMe(token, profile._id, dispatch);
   }, [token, isAdmin, profile?._id, dispatch, navigate]);
 
+  const handleDelete = (id) => {
+
+  }
   return (
     <main className="home-container">
       <div className="home-title">User List</div>
@@ -43,7 +46,7 @@ const HomePage = () => {
         ) : me ? (
           <div className="user-container">
             <div className="home-user">{me.username}</div>
-            <div className="delete-user">Delete</div>
+            <div className="delete-user" onClick={() => handleDelete()}>Delete</div>
           </div>
         ) : (
           <div>Bạn không có quyền xem danh sách user</div>
