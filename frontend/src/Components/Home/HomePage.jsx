@@ -4,6 +4,9 @@ import { getAllUsers, deleteUser } from "../../redux/apiRequest";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearMsg, setMsg } from "../../redux/userSlice";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import { logout, loginSuccess } from "../../redux/authSlice";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -12,7 +15,7 @@ const HomePage = () => {
   // auth
   const auth    = useSelector(s => s.auth.login);
   const token   = auth?.token ?? auth?.currentUser?.token;
-  const profile = auth?.user  ?? auth?.currentUser?.user; // từ login
+  const profile = auth?.user  ?? auth?.currentUser?.user;
   const isAdmin = !!profile?.admin;
   const selfId  = profile?._id || profile?.id || null;
 
@@ -22,6 +25,7 @@ const HomePage = () => {
   const msg     = useSelector(s => s.users.msg);
   const msgType = useSelector(s => s.users.msgType);
 
+  let axiosJWT = axios.create();
   useEffect(() => {
     if (!token) { navigate("/login"); return; }
     getAllUsers(token, dispatch);
@@ -46,6 +50,38 @@ const HomePage = () => {
     }
     deleteUser(token, id, dispatch);
   };
+
+  const refreshToken = async () => {
+    try {
+      const res = await axios.post("/v1/auth/refresh", {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (err) {
+      console.log("Refresh token error:", err);
+      navigate("/login");
+    }
+  }
+
+  axiosJWT.interceptors.request.use(
+    async (config) => {
+      let date = new Date();
+      const decodedToken = jwt_decode(token);
+      if(decodedToken.exp < date.getTime() / 1000) {
+        const data = await refreshToken();
+        const refreshUser = {
+          ...profile,
+          token: data.token,
+        };
+        dispatch(loginSuccess(refreshUser));
+        config.headers["Authorization"] = "Bearer " + data.token;
+      }
+      return config;
+    },
+    (err) => {
+        return Promise.reject(err);
+    }
+  );
 
   return (
     <main className="home-container">
