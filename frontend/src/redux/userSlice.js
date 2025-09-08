@@ -21,7 +21,12 @@ const userSlice = createSlice({
       s.list.limit = payload.limit ?? s.list.limit;
       s.list.total = payload.total ?? s.list.total;
     },
-    getUsersFail: (s, a) => { s.list.isFetching = false; s.list.error = a.payload || "error"; },
+    getUsersFail: (s, a) => {
+      s.list.isFetching = false;
+      // ép lỗi về string
+      s.list.error  = a.payload?.message || a.payload || "Đã có lỗi";
+      s.list.status = a.payload?.status;
+    },
 
     // ------- ME (self) -------
     getMeStart:   (s) => { 
@@ -32,31 +37,32 @@ const userSlice = createSlice({
       s.me.isFetching = false; 
       s.me.profile = a.payload; 
     },
-    getMeFail: (s, a) => { 
-      s.me.isFetching = false; 
-      s.me.error = a.payload || "error"; 
+    getMeFail: (s, a) => {
+      s.me.isFetching = false;
+      s.me.error  = a.payload?.message || a.payload || "Đã có lỗi";
+      s.me.status = a.payload?.status;
     },
-    deleteUserStart: (s) => { 
-      s.me.isFetching = true; 
-      s.me.error = null; 
+    deleteUserStart:   (s) => { s.msg = null; s.msgType = null; },
+    deleteUserSuccess: (s, a) => {
+      const { id } = a.payload || {};
+      // tìm username trước khi xoá để in thông báo đẹp
+      const victim = s.list.items.find(u => u._id === id);
+      s.list.items = s.list.items.filter(u => u._id !== id);
+      s.msg = `Đã xoá user "${victim?.username ?? id}" thành công.`;
+      s.msgType = "success";
     },
-    deleteUserSuccess: (s, a) => { 
-      s.me.isFetching = false; 
-      s.me.profile = null; 
-      s.msg = a.payload || "Deleted successfully";
+    deleteUserFail: (s, a) => {
+      s.msg = a.payload?.message || "Xoá user thất bại.";
+      s.msgType = "error";
     },
-    deleteUserFail: (s, a) => { 
-      s.me.isFetching = false; 
-      s.me.error = true; 
-      s.msg = a.payload || "error";
-    },
+    clearMsg: (s) => { s.msg = null; s.msgType = null; },
   },
 });
 
 export const {
   getUsersStart, getUsersSuccess, getUsersFail,
   getMeStart, getMeSuccess, getMeFail,
-  deleteUserStart, deleteUserSuccess, deleteUserFail,
+  deleteUserStart, deleteUserSuccess, deleteUserFail, clearMsg,
 } = userSlice.actions;
 
 export default userSlice.reducer;
