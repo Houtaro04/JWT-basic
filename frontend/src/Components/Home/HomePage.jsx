@@ -1,52 +1,53 @@
 import { useEffect } from "react";
 import "./home.css";
-import { getAllUsers, getMe, deleteUser } from "../../redux/apiRequest";
+import { getAllUsers, deleteUser } from "../../redux/apiRequest";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { clearMsg } from "../../redux/userSlice"; // nhớ có action này
+import { clearMsg, setMsg } from "../../redux/userSlice";
 
 const HomePage = () => {
-  // 1) Hooks ở đầu component
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 2) State
+  // auth
   const auth    = useSelector(s => s.auth.login);
   const token   = auth?.token ?? auth?.currentUser?.token;
-  const profile = auth?.user  ?? auth?.currentUser?.user; // thông tin có sẵn sau login
-  const isAdmin = profile?.admin === true;
+  const profile = auth?.user  ?? auth?.currentUser?.user; // từ login
+  const isAdmin = !!profile?.admin;
+  const selfId  = profile?._id || profile?.id || null;
 
-  const userList = useSelector(s => s.users.list.items);
-  const me       = useSelector(s => s.users.me.profile);
-  const usersError  = useSelector(s => s.users.list.error);
-  const usersStatus = useSelector(s => s.users.list.status);
-  const msg      = useSelector(s => s.users.msg);
-  const msgType  = useSelector(s => s.users.msgType);
+  // users slice
+  const { items: userList = [], error: usersError, status: usersStatus } =
+    useSelector(s => s.users.list);
+  const msg     = useSelector(s => s.users.msg);
+  const msgType = useSelector(s => s.users.msgType);
 
-  // Fallback cho user thường:
-  const self = me ?? profile;
-
-  // 3) Gọi API đúng chỗ
+  // luôn fetch list cho mọi user
   useEffect(() => {
     if (!token) { navigate("/login"); return; }
-    if (isAdmin) getAllUsers(token, dispatch);
-    else if (profile?._id) getMe(token, profile._id, dispatch);
-  }, [token, isAdmin, profile?._id, dispatch, navigate]);
+    getAllUsers(token, dispatch);
+  }, [token, dispatch, navigate]);
 
-  // 4) Tự ẩn thông báo sau 3s (side-effect, KHÔNG đặt trong JSX)
+  // auto-clear message
   useEffect(() => {
     if (!msg) return;
     const t = setTimeout(() => dispatch(clearMsg()), 3000);
     return () => clearTimeout(t);
   }, [msg, dispatch]);
 
-  // 5) Handlers
-  const handleDelete = (id) => {
+  const canDelete = (u) => isAdmin || (selfId && u._id === selfId);
+
+  const handleDelete = (u) => {
+    const id = u?._id;
     if (!id) return;
+
+    if (!canDelete(u)) {
+      dispatch(setMsg({ message: "Bạn không có quyền làm điều đó", type: "error" }));
+      return; // KHÔNG gọi API
+    }
     deleteUser(token, id, dispatch);
   };
 
-  // 6) JSX
   return (
     <main className="home-container">
       <div className="home-title">User List</div>
@@ -61,24 +62,22 @@ const HomePage = () => {
       )}
 
       <div className="home-userlist">
-        {isAdmin ? (
-          userList.length === 0 ? (
-            <div>Không có user</div>
-          ) : (
-            userList.map(u => (
-              <div key={u._id} className="user-container">
-                <div className="home-user">{u.username}</div>
-                <button className="delete-user" onClick={() => handleDelete(u._id)}>Delete</button>
-              </div>
-            ))
-          )
-        ) : self ? (
-          <div className="user-container">
-            <div className="home-user">{self.username}</div>
-            <button className="delete-user" onClick={() => handleDelete(self._id)}>Delete</button>
-          </div>
+        {userList.length === 0 ? (
+          <div>Không có user</div>
         ) : (
-          <div>Bạn không có quyền xem danh sách user</div>
+          userList.map(u => (
+            <div key={u._id} className="user-container">
+              <div className="home-user">{u.username}</div>
+              <button
+                className="delete-user"
+                disabled={!canDelete(u)}
+                title={canDelete(u) ? "Xoá tài khoản" : "Chỉ có thể xoá chính mình"}
+                onClick={() => handleDelete(u._id)}
+              >
+                Delete
+              </button>
+            </div>
+          ))
         )}
       </div>
 

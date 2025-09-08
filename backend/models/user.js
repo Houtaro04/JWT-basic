@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 6,
+        select: false, // mặc định không trả về password
     },
     admin:{
         type: Boolean,

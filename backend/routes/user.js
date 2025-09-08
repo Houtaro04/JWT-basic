@@ -1,18 +1,19 @@
 // backend/routes/user.js
 const router = require("express").Router();
 const userController = require("../controller/userController");
-const mw = require("../controller/middlewareController");
+const {
+  verifyToken,
+  verifyTokenAndAuthorization,
+  verifyTokenAndAdmin,
+} = require("../controller/middlewareController");
 
-// Health check (tuỳ chọn)
-router.get("/__ping", (req, res) => res.json({ ok: true }));
+// Xem danh sách: mọi user đã đăng nhập
+router.get("/", verifyToken, userController.getAllUsers);
 
-// Admin xem tất cả users
-router.get("/", mw.verifyTokenAndAdmin, userController.getAllUsers);
+// Xem 1 user: admin hoặc chính chủ
+router.get("/:id", verifyTokenAndAuthorization, userController.getUserById);
 
-// User chỉ xem chính mình (hoặc admin xem bất kỳ id)
-router.get("/:id", mw.verifyTokenAndAuthorization, userController.getUserById);
-
-// Xoá user: cho admin hoặc chính chủ
-router.delete("/:id", mw.verifyTokenAndAuthorization, userController.deleteUser);
+// Xoá: admin hoặc chính chủ
+router.delete("/:id", verifyTokenAndAuthorization, userController.deleteUser);
 
 module.exports = router;

@@ -11,9 +11,6 @@ import {
     getUsersStart,
     getUsersSuccess,
     getUsersFail,
-    getMeStart,
-    getMeSuccess,
-    getMeFail,
     deleteUserStart,
     deleteUserSuccess,
     deleteUserFail,
@@ -68,30 +65,18 @@ export const getAllUsers = async (token, dispatch) => {
   }
 };
 
-// Lấy thông tin chính mình (user thường)
-export const getMe = async (token, id, dispatch) => {
-  dispatch(getMeStart());
-  try {
-    const { data } = await axios.get(`/v1/user/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    dispatch(getMeSuccess(data));
-  } catch (err) {
-    dispatch(getMeFail(err.response?.data || err.message));
-  }
-};
-
 export const deleteUser = async (token, id, dispatch) => {
   dispatch(deleteUserStart());
   try {
     await axios.delete(`/v1/user/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    // chỉ gửi id, reducer sẽ tự tìm username & cập nhật list
     dispatch(deleteUserSuccess({ id }));
   } catch (err) {
     dispatch(deleteUserFail({
-      message: err.response?.data?.message || err.message
+      status: err.response?.status,
+      message: err.response?.data?.message || err.message,
+      type: "error",
     }));
   }
 };
