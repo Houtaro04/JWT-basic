@@ -11,7 +11,7 @@ const initialState = {
     status: null,
   },
   msg: null,      // thông điệp hiển thị tạm thời
-  msgType: null,  // 'success' | 'error'
+  msgType: null,  // 'success' | 'error' | 'info'
 };
 
 const userSlice = createSlice({
@@ -25,18 +25,23 @@ const userSlice = createSlice({
       s.list.status = null;
     },
     getUsersSuccess: (s, { payload }) => {
+      const items = Array.isArray(payload) ? payload : (payload?.items || []);
       s.list.isFetching = false;
-      s.list.items  = payload.items || [];
-      s.list.page   = payload.page  ?? 1;
-      s.list.limit  = payload.limit ?? 20;
-      s.list.total  = payload.total ?? s.list.items.length;
+      s.list.items  = items;
+      s.list.page   = payload?.page  ?? 1;
+      s.list.limit  = payload?.limit ?? 20;
+      s.list.total  = payload?.total ?? items.length;
       s.list.error  = null;
       s.list.status = 200;
     },
     getUsersFail: (s, { payload }) => {
+      const message = payload?.message || "Lỗi tải danh sách";
       s.list.isFetching = false;
-      s.list.error  = payload?.message || "Lỗi tải danh sách";
+      s.list.error  = message;
       s.list.status = payload?.status ?? null;
+      // tuỳ bạn: cũng show ra msg cho dễ nhìn
+      s.msg = message;
+      s.msgType = "error";
     },
 
     // ----- DELETE -----
@@ -49,21 +54,31 @@ const userSlice = createSlice({
       const id = payload?.id;
       const victim = s.list.items.find(u => u._id === id);
       s.list.items = s.list.items.filter(u => u._id !== id);
+      s.list.total = Math.max(0, (s.list.total || 0) - 1);
       s.msg = victim ? `Đã xoá: ${victim.username}` : "Đã xoá";
       s.msgType = "success";
+      s.list.error = null;
+      s.list.status = 200;
     },
     deleteUserFail: (s, { payload }) => {
+      const message = payload?.message || "Xoá thất bại";
       s.list.isFetching = false;
-      s.list.error  = payload?.message || "Xoá thất bại";
+      s.list.error  = message;
       s.list.status = payload?.status ?? null;
-      s.msg = s.list.error;
+      s.msg = message;
       s.msgType = "error";
     },
 
     // ----- MESSAGE -----
+    // Hỗ trợ gọi: setMsg({ text: "...", type: "error" }) hoặc setMsg("...") (mặc định info)
     setMsg: (s, { payload }) => {
-      s.msg = payload?.message || String(payload || "");
-      s.msgType = payload?.type || "error";
+      if (typeof payload === "string") {
+        s.msg = payload;
+        s.msgType = "info";
+      } else {
+        s.msg = payload?.text ?? payload?.message ?? null;
+        s.msgType = payload?.type || "info";
+      }
     },
     clearMsg: (s) => { s.msg = null; s.msgType = null; },
   },

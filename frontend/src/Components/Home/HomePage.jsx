@@ -22,13 +22,11 @@ const HomePage = () => {
   const msg     = useSelector(s => s.users.msg);
   const msgType = useSelector(s => s.users.msgType);
 
-  // luôn fetch list cho mọi user
   useEffect(() => {
     if (!token) { navigate("/login"); return; }
     getAllUsers(token, dispatch);
   }, [token, dispatch, navigate]);
 
-  // auto-clear message
   useEffect(() => {
     if (!msg) return;
     const t = setTimeout(() => dispatch(clearMsg()), 3000);
@@ -42,8 +40,9 @@ const HomePage = () => {
     if (!id) return;
 
     if (!canDelete(u)) {
-      dispatch(setMsg({ message: "Bạn không có quyền làm điều đó", type: "error" }));
-      return; // KHÔNG gọi API
+      // show thông báo thay vì gọi API
+      dispatch(setMsg({ text: "Bạn không có quyền làm điều đó", type: "error" }));
+      return;
     }
     deleteUser(token, id, dispatch);
   };
@@ -69,10 +68,9 @@ const HomePage = () => {
             <div key={u._id} className="user-container">
               <div className="home-user">{u.username}</div>
               <button
-                className="delete-user"
-                disabled={!canDelete(u)}
+                className={`delete-user ${!canDelete(u) ? "is-disabled" : ""}`}
                 title={canDelete(u) ? "Xoá tài khoản" : "Chỉ có thể xoá chính mình"}
-                onClick={() => handleDelete(u._id)}
+                onClick={() => handleDelete(u)}
               >
                 Delete
               </button>
