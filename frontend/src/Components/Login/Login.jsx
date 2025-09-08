@@ -32,7 +32,9 @@ const Login = () => {
                 <input 
                     type="password" 
                     placeholder="Enter your password" 
-                    onChange={(e)=>setPassword(e.target.value)}/>
+                    onChange={(e)=>setPassword(e.target.value)}
+                    autoComplete="current-password"
+                />
                 <button type="submit"> Continue </button>
             </form>
             <div className="login-register"> Don't have an account yet? </div>

@@ -13,13 +13,18 @@ const HomePage = () => {
   // 2) State
   const auth    = useSelector(s => s.auth.login);
   const token   = auth?.token ?? auth?.currentUser?.token;
-  const profile = auth?.user  ?? auth?.currentUser?.user;
+  const profile = auth?.user  ?? auth?.currentUser?.user; // thông tin có sẵn sau login
   const isAdmin = profile?.admin === true;
 
-  const { items: userList, error: usersError, status: usersStatus } = useSelector(s => s.users.list);
-  const me      = useSelector(s => s.users.me.profile);
-  const msg     = useSelector(s => s.users.msg);
-  const msgType = useSelector(s => s.users.msgType);
+  const userList = useSelector(s => s.users.list.items);
+  const me       = useSelector(s => s.users.me.profile);
+  const usersError  = useSelector(s => s.users.list.error);
+  const usersStatus = useSelector(s => s.users.list.status);
+  const msg      = useSelector(s => s.users.msg);
+  const msgType  = useSelector(s => s.users.msgType);
+
+  // Fallback cho user thường:
+  const self = me ?? profile;
 
   // 3) Gọi API đúng chỗ
   useEffect(() => {
@@ -63,18 +68,14 @@ const HomePage = () => {
             userList.map(u => (
               <div key={u._id} className="user-container">
                 <div className="home-user">{u.username}</div>
-                <button className="delete-user" onClick={() => handleDelete(u._id)}>
-                  Delete
-                </button>
+                <button className="delete-user" onClick={() => handleDelete(u._id)}>Delete</button>
               </div>
             ))
           )
-        ) : me ? (
+        ) : self ? (
           <div className="user-container">
-            <div className="home-user">{me.username}</div>
-            <button className="delete-user" onClick={() => handleDelete(me._id)}>
-              Delete
-            </button>
+            <div className="home-user">{self.username}</div>
+            <button className="delete-user" onClick={() => handleDelete(self._id)}>Delete</button>
           </div>
         ) : (
           <div>Bạn không có quyền xem danh sách user</div>

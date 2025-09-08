@@ -1,42 +1,43 @@
+// src/Components/NavBar/NavBar.jsx
 import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
-import { useSelector } from "react-redux";
-import { logout } from "../../redux/authSlice";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../redux/authSlice"; // đảm bảo slice có action này
 
 const NavBar = () => {
-  const user = useSelector((state) => state.auth.login.currentUser);
+  const current = useSelector(s => s.auth.login.currentUser); // có thể null | user | {user, token}
+  const me      = useSelector(s => s.users?.me?.profile);     // nếu bạn có getMe
+
+  // Lấy tên theo các trường hợp có thể có, dùng optional chaining
+  const displayName =
+    me?.username ??
+    current?.user?.username ??   // khi current = { user, token }
+    current?.username ?? null;   // khi current = user thuần
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    // clear redux state
     dispatch(logout());
-
-    // xóa token/user ở localStorage
-    localStorage.removeItem("persist:root");
-    localStorage.removeItem("token");
-
-    // điều hướng về trang login
+    localStorage.removeItem("persist:root"); // nếu dùng redux-persist
     navigate("/login");
   };
 
   return (
     <nav className="navbar-container">
-      <Link to="/" className="navbar-home"> Home </Link>
-      {user? (
+      <Link to="/" className="navbar-home">Home</Link>
+
+      {displayName ? (
         <>
-        <p className="navbar-user">Hi, <span> {user.user.username} </span> </p>
-        <button className="navbar-logout" onClick={handleLogout} style={{color: 'white'}}>
-            Log out
-          </button>
+          <p className="navbar-user">Hi, <span>{displayName}</span></p>
+          <button className="navbar-logout" onClick={handleLogout} style={{color: 'white'}}>Log out</button>
         </>
-      ) : (    
+      ) : (
         <>
-      <Link to="/login" className="navbar-login"> Login </Link>
-      <Link to="/register" className="navbar-register"> Register</Link>
-      </>
-)}
+          <Link to="/login" className="navbar-login">Login</Link>
+          <Link to="/register" className="navbar-register">Register</Link>
+        </>
+      )}
     </nav>
   );
 };

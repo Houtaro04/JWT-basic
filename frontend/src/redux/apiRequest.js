@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../redux/axios";
 import { 
     loginStart, 
     loginSuccess, 
@@ -20,14 +20,19 @@ import {
 } from "./userSlice";
 
 export const loginUser = async (user, dispatch, navigate) => {
-    dispatch(loginStart());
-    try {
-        const res = await axios.post("/v1/auth/login", user);
-        dispatch(loginSuccess(res.data));
-        navigate("/");
-    } catch (err) {
-        dispatch(loginFail());
-    }
+  dispatch(loginStart());
+  try {
+    const basic = btoa(`${user.username}:${user.password}`); // base64, KHÔNG mã hoá
+    const res = await axios.post(
+      "/v1/auth/login",
+      { username: user.username },                // <-- body chỉ có username
+      { headers: { Authorization: `Basic ${basic}` } } // <-- password nằm ở header
+    );
+    dispatch(loginSuccess(res.data));
+    navigate("/");
+  } catch (err) {
+    dispatch(loginFail());
+  }
 };
 
 export const registerUser = async (user, dispatch, navigate) => {
